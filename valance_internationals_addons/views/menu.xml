@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem id="menu_my_orders"
+              name="My Orders"
+              action="action_sale_orders_portal"
+              sequence="20"/>
+</odoo>

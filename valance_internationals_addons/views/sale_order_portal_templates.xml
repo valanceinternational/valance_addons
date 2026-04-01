@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Sale Orders List Template -->
+    <template id="sale_orders_template" name="Sale Orders List">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-set="title">Orders</t>
+
+            <div class="orders-app">
+
+                <!-- Header -->
+                <div class="app-header">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <div class="app-icon">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="4" y="4" width="24" height="24" rx="6" fill="currentColor"/>
+                                    <path d="M12 16L14.5 18.5L20 13" stroke="white" stroke-width="2.5"
+                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <h1 class="app-title">Orders</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Grid -->
+                <div class="orders-container">
+                    <div class="orders-grid">
+
+                        <t t-foreach="orders" t-as="order">
+                            <div class="order-card" t-att-data-order-id="order.id">
+                                <a t-attf-href="/sale/order/#{order.id}" class="order-card-link">
+                                    <div class="order-card-header">
+                                        <span class="order-number" t-esc="order.name"/>
+                                        <span t-attf-class="status-badge #{('confirmed' if order.state in ['sale', 'done'] else 'draft')}">
+                                            <t t-if="order.state == 'draft'">Draft</t>
+                                            <t t-elif="order.state == 'sent'">Quotation Sent</t>
+                                            <t t-elif="order.state == 'sale'">Confirmed</t>
+                                            <t t-elif="order.state == 'done'">Done</t>
+                                            <t t-else="">Cancelled</t>
+                                        </span>
+                                    </div>
+                                    <h3 class="customer-name" t-esc="order.partner_id.name"/>
+                                    <div class="order-meta">
+                                        <span class="date" t-esc="order.date_order.strftime('%b %d, %Y')"/>
+                                        <span class="products">
+                                            <t t-esc="len(order.order_line)"/>
+                                            Products
+                                        </span>
+                                    </div>
+                                    <div class="card-hover-effect"></div>
+                                </a>
+                            </div>
+                        </t>
+
+                        <!-- Empty State -->
+                        <t t-if="not orders">
+                            <div class="col-12 text-center py-5">
+                                <i class="fa fa-shopping-cart fa-3x text-muted mb-3"></i>
+                                <h3 class="text-muted">No orders found</h3>
+                                <p class="text-muted">You don't have any orders yet.</p>
+                            </div>
+                        </t>
+
+                    </div>
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+    <!-- Sale Order Detail Template -->
+    <template id="sale_order_detail_template" name="Sale Order Detail">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-set="title">
+                <t t-esc="order.name"/>
+            </t>
+
+            <div class="orders-app" id="order-detail-app" t-att-data-order-id="order.id"
+                 t-att-data-currency-symbol="order.company_id.currency_id.symbol"
+                 t-att-data-currency-position="order.company_id.currency_id.position">
+
+                <!-- Detail Header -->
+                <div class="detail-header">
+                    <a href="/sale/orders" class="btn-back">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <h2 class="detail-order-number" t-esc="order.name"/>
+                </div>
+
+                <div class="detail-container">
+
+                    <!-- Information Card -->
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <span class="section-label">Information</span>
+                            <span t-attf-class="status-badge #{('confirmed' if order.state in ['sale', 'done'] else 'draft')}">
+                                <t t-if="order.state == 'draft'">Draft</t>
+                                <t t-elif="order.state == 'sent'">Quotation Sent</t>
+                                <t t-elif="order.state == 'sale'">Confirmed</t>
+                                <t t-elif="order.state == 'done'">Done</t>
+                                <t t-else="">Cancelled</t>
+                            </span>
+                        </div>
+
+                        <div class="customer-section">
+                            <label>Customer</label>
+                            <h3 t-esc="order.partner_id.name"/>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Date</label>
+                                <span t-esc="order.date_order.strftime('%b %d, %Y')"/>
+                            </div>
+                            <div class="info-item">
+                                <label>Reference</label>
+                                <span t-esc="order.name"/>
+                            </div>
+                            <div class="info-item">
+                                <label>Picking Date</label>
+                                <input type="date"
+                                       class="picking-date-input"
+                                       id="picking-date"
+                                       t-att-value="order.picking_date.strftime('%Y-%m-%d') if order.picking_date else ''"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Lines Section -->
+                    <div class="section-header">
+                        <span class="section-label">Order Lines</span>
+                    </div>
+
+                    <div class="order-lines">
+
+                        <t t-foreach="order.order_line" t-as="line">
+                            <div class="line-item" t-att-data-line-id="line.id">
+                                <div class="line-header">
+                                    <h4 t-esc="line.product_id.name"/>
+                                    <span class="product-code" t-if="line.product_id.default_code"
+                                          t-esc="line.product_id.default_code"/>
+                                </div>
+                                <div class="line-details">
+                                    <div class="qty-container">
+                                        <span class="price-label">Qty:</span>
+                                        <input type="number"
+                                               class="qty-input"
+                                               t-att-data-line-id="line.id"
+                                               t-att-placeholder="int(line.product_uom_qty)"
+                                               step="1"
+                                               min="1"
+                                               required="required"/>
+                                    </div>
+                                    <div class="price-container">
+                                        <span class="price-label">MRP:</span>
+                                        <input type="number"
+                                               class="price-input"
+                                               t-att-data-line-id="line.id"
+                                               t-att-placeholder="'%.2f' % line.price_unit"
+                                               step="0.01"
+                                               min="0.01"
+                                               required="required"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                    </div>
+
+                    <div class="total-card">
+                        <div class="total-row total-amount">
+                            <span>Total Amount</span>
+                            <span class="amount" id="total-amount">
+                                <t t-esc="order.company_id.currency_id.symbol"/>
+                                <t t-esc="'%.2f' % order.amount_total"/>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="btn-primary" id="save-order-btn">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.7 7.8l-7.5 7.5-4.9-4.9" stroke="currentColor" stroke-width="2"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Save Order
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </t>
+    </template>
+</odoo>
