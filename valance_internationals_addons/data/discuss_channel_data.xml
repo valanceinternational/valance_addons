@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="channel_warehouse_notifications" model="discuss.channel">
+        <field name="name">Warehouse Notifications</field>
+        <field name="channel_type">channel</field>
+        <field name="description">Sale order confirmation alerts for warehouse managers. Messages are posted automatically when orders are confirmed.</field>
+        <field name="group_ids" eval="[(4, ref('valance_internationals_addons.group_warehouse_manager'))]"/>
+        <field name="group_public_id" ref="valance_internationals_addons.group_warehouse_manager"/>
+    </record>
+</odoo>

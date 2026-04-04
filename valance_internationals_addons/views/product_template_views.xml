@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Product Template Form: add lr_number and part_number -->
+    <record id="product_template_form_inherit_valance" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.valance</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="lr_number"/>
+                <field name="part_number"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template Base Form: change list_price label to MRP -->
+    <record id="product_template_base_form_inherit_valance" model="ir.ui.view">
+        <field name="name">product.template.base.form.inherit.valance</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='list_price']" position="attributes">
+                <attribute name="string">MRP</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template List: change Sales Price to MRP -->
+    <record id="product_template_list_inherit_valance" model="ir.ui.view">
+        <field name="name">product.template.list.inherit.valance</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='list_price']" position="attributes">
+                <attribute name="string">MRP</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template Kanban: change Price to MRP -->
+    <record id="product_template_kanban_inherit_valance" model="ir.ui.view">
+        <field name="name">product.template.kanban.inherit.valance</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//span[contains(., 'Price:')]" position="replace">
+                <span>
+                    MRP: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template Search: add part_number to existing name filter_domain -->
+    <record id="product_template_search_inherit_valance" model="ir.ui.view">
+        <field name="name">product.template.search.inherit.valance</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="filter_domain">['|', '|', '|', '|', ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self), ('part_number', 'ilike', self)]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

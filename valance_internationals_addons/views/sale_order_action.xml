@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_sale_orders_portal" model="ir.actions.act_url">
+        <field name="name">Sale Orders</field>
+        <field name="url">/sale/orders</field>
+        <field name="target">self</field>
+    </record>
+</odoo>

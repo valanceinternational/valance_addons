@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_order_form_inherit_valance" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.valance</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='commitment_date'][last()]" position="after">
+                <field name="picking_date"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Order Summary" name="order_summary">
+                    <group>
+                        <field name="order_lines_summary"
+                               widget="CopyClipboardText"
+                               readonly="1"
+                               nolabel="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
