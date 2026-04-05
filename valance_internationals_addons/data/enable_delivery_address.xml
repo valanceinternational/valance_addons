@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <!-- Enable billing/shipping address on sale orders: add group to internal users -->
+    <function model="res.groups" name="write">
+        <value eval="[ref('base.group_user')]"/>
+        <value eval="{'implied_ids': [(4, ref('account.group_delivery_invoice_address'))]}"/>
+    </function>
+</odoo>
