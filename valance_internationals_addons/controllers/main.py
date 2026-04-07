@@ -13,7 +13,9 @@ class SaleOrderController(http.Controller):
         domain = [('state', '=', 'sale')]
         if company:
             domain.append(('company_id', '=', company.id))
-        orders = request.env['sale.order'].sudo().search(domain, order='date_order desc')
+
+        all_orders = request.env['sale.order'].sudo().search(domain, order='date_order desc')
+        orders = all_orders.filtered(lambda o: not o.invoice_ids)
         return request.render('valance_internationals_addons.sale_orders_template', {
             'orders': orders,
         })

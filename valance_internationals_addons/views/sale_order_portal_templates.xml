@@ -149,6 +149,18 @@
                                     <span class="product-code" t-if="line.product_id.default_code"
                                           t-esc="line.product_id.default_code"/>
                                 </div>
+                                <div class="line-meta">
+                                    <div class="inventory-location">
+                                        <span class="price-label">Inventory Location:</span>
+                                        <span t-if="line.product_id.property_stock_inventory"
+                                              t-esc="line.product_id.property_stock_inventory.complete_name"/>
+                                        <span t-else="">N/A</span>
+                                    </div>
+                                    <div class="stock-qty">
+                                        <span class="price-label">In Stock:</span>
+                                        <span t-esc="'%.0f' % line.product_id.qty_available"/>
+                                    </div>
+                                </div>
                                 <div class="line-details">
                                     <div class="qty-container">
                                         <span class="price-label">Qty:</span>
