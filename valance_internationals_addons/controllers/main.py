@@ -34,6 +34,7 @@ class SaleOrderController(http.Controller):
         try:
             order_line = request.env['sale.order.line'].sudo().browse(order_line_id)
             order_line.sudo().write({'price_unit': price})
+            order_line.product_id.sudo().write({'list_price': price})
             return {
                 'success': True,
                 'message': 'Price updated successfully',

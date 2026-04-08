@@ -41,14 +41,21 @@ publicWidget.registry.SaleOrderDetail = publicWidget.Widget.extend({
     _onQtyChange: function (ev) {
         const $input = $(ev.currentTarget);
         const lineId = $input.data('line-id');
+        const maxQty = parseInt($input.attr('placeholder'));
         let newQty = parseInt($input.val());
 
-        // Enforce positive
+        // Enforce positive and not greater than original qty
         if (isNaN(newQty) || newQty < 1) {
             newQty = 1;
             $input.val(1);
+        } else if (newQty > maxQty) {
+            newQty = maxQty;
+            $input.val(maxQty);
+            this._showNotification(
+                `Quantity cannot exceed the ordered quantity of ${maxQty}.`,
+                'danger'
+            );
         }
-
         this.changedQtyLines.set(lineId, newQty);
         $input.addClass('price-changed');
         this._updateTotal();
@@ -118,7 +125,9 @@ publicWidget.registry.SaleOrderDetail = publicWidget.Widget.extend({
 
         this.$('.qty-input').each(function () {
             const val = $(this).val();
-            if (!val || parseInt(val) < 1) {
+            const maxQty = parseInt($(this).attr('placeholder'));
+            const parsed = parseInt(val);
+            if (!val || parsed < 1 || parsed > maxQty) {
                 $(this).addClass('input-error');
                 hasError = true;
             } else {

@@ -26,9 +26,9 @@ class SaleOrder(models.Model):
             lines = []
             for line in order.order_line.filtered(lambda l: l.product_id):
                 qty = line.product_uom_qty
-                amount_str = f"{line.price_subtotal}"
+                amount_str = f"{line.price_total}"
                 if qty > 1:
-                    amount_str = f"{line.price_subtotal} ({line.price_unit})"
+                    amount_str = f"{line.price_total} ({line.price_unit})"
                 lines.append(
                     f"{line.product_id.display_name} | Qty: {qty} | "
                     f"Amount: {amount_str}"
