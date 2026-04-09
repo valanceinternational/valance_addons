@@ -9,6 +9,7 @@
             <xpath expr="//field[@name='default_code']" position="after">
                 <field name="lr_number"/>
                 <field name="part_number"/>
+		<field name="storage_location_id"/>
             </xpath>
         </field>
     </record>
