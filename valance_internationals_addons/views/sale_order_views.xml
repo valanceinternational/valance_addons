@@ -45,6 +45,10 @@
                     </group>
                 </page>
             </xpath>
+	    <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
+            	<field name="qty_on_hand"/>
+            </xpath>
+
         </field>
     </record>
 </odoo>

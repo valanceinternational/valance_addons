@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
                 if qty > 1:
                     amount_str = f"{line.price_total} ({line.price_unit})"
                 lines.append(
-                    f"{line.product_id.display_name} | Qty: {qty} | "
+                    f"{line.product_id.name} | Qty: {qty} | "
                     f"Amount: {amount_str}"
                 )
             order.order_lines_summary = "\n".join(lines)

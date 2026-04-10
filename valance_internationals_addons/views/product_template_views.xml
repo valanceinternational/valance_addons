@@ -11,6 +11,17 @@
                 <field name="part_number"/>
 		<field name="storage_location_id"/>
             </xpath>
+            <xpath expr="//page[@name='sales']//group[@name='extra_info']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[field[@name='qty_available']]" position="after">
+                <label for="product_tag_ids"/>
+                <div>
+                    <field name="product_tag_ids" widget="many2many_tags"
+                        context="{'product_template_id': id}"/>
+                </div>
+            </xpath>
+
         </field>
     </record>
 
